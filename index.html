@@ -10,7 +10,7 @@
 		</style>
 	</head>
 	<body>
-		<div style="position: fixed; top: 5%; left: 50%; margin-left: -300px;">
+		<div style="position: fixed; top: 5%; left: 50%; margin-left: -300px; align: left;">
 			<canvas id="particles" width="600" height="400" style="border-style: solid; border-width: 4px; border-color: #888;"></canvas>
 			<table>
 				<tr>
@@ -28,6 +28,10 @@
 				</tr><tr>
 					<td colspan="2">
 						<button type="button" onclick="generateButton()">Generate!</button>
+						<br>
+						<button type="button" onclick="document.getElementsByName('nrParticles')[0].value = 12; document.getElementsByName('radius')[0].value = 32; document.getElementsByName('speed')[0].value = 500; document.getElementsByName('coefficient')[0].value = 0.9; generateButton();">Default</button>
+						<button type="button" onclick="document.getElementsByName('nrParticles')[0].value = 500; document.getElementsByName('radius')[0].value = 8; document.getElementsByName('speed')[0].value = 500; document.getElementsByName('coefficient')[0].value = 0.9; generateButton();">Epic</button>
+						<button type="button" onclick="document.getElementsByName('nrParticles')[0].value = 900; document.getElementsByName('radius')[0].value = 4; document.getElementsByName('speed')[0].value = 500; document.getElementsByName('coefficient')[0].value = 0.75; generateButton();">Über</button>
 					</td>
 				</tr>
 			</table>
