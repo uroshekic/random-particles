@@ -49,6 +49,7 @@ function frame () {
 		diff = now - time,
 		x, y, coll;
 	time = now;
+	f++;
 
 	wipeCanvas();
 
@@ -130,6 +131,7 @@ function generateButton () {
 	generate();
 	start = (new Date()).getTime();
 	time = start;
+	f = 0;
 }
 
 // Update HTML
@@ -138,8 +140,11 @@ document.getElementsByName('radius')[0].value = radii[1];
 document.getElementsByName('speed')[0].value = speeds[1];
 document.getElementsByName('coefficient')[0].value = coefficient;
 
+setInterval(function () { document.getElementById('fps').innerHTML = Math.round(f * 1000 / (time - start)); }, 1000);
+
 // Let's go!
 generate();
 var start = (new Date()).getTime(),
-	time = start;
+	time = start,
+	f = 0;
 frame();
