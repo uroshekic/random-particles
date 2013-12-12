@@ -1,5 +1,5 @@
 var nrParticles = 12, 		// Number of random particles
-	radii = [4, 32],		// Radius range
+	radii = [1, 32],		// Radius range
 	speeds = [-500, 500], 	// Speed range
 	coefficient = 0.9, 		// Coefficient of restitution (c = 1 <=> elastic collision)
 
@@ -26,6 +26,22 @@ function Particle (position, color, radius, speed) {
 }
 
 /*
+ * Generate random particles
+ */
+function generate () {
+	var j, k, l, m;
+	for (var i = 0; i < nrParticles; i++) {
+		//j = [ Math.floor(Math.random() * c_width), Math.floor(Math.random() * c_height) ];
+		k = colors[Math.floor(Math.random() * colors.length)];
+		l = randomRange(radii[0], radii[1]);
+		j = [ randomRange(l, c_width - l), randomRange(l, c_height - l) ]; // We need to make sure that particles don't get stuck on the border
+		m = [ randomRangeFloat(speeds[0], speeds[1]), randomRangeFloat(speeds[0], speeds[1]) ]
+
+		particles.push(new Particle(j, k, l, m));
+	}
+}
+
+/*
  * 
  */
 function frame () {
@@ -34,9 +50,7 @@ function frame () {
 		x, y, coll;
 	time = now;
 
-	c.fillStyle = "#FFF";
-	c.fillRect(0, 0, c_width, c_height);
-	c.fillStyle = "#000";
+	wipeCanvas();
 
 	for (var i = 0; i < particles.length; i++) {
 		x = particles[i].position[0] + particles[i].speed[0] * diff / 1000;
@@ -92,19 +106,40 @@ function randomRangeFloat (i, j) {
 	return i + Math.random() * (j - i);
 }
 
-// Generate random particles
-var j, k, l, m;
-for (var i = 0; i < nrParticles; i++) {
-	//j = [ Math.floor(Math.random() * c_width), Math.floor(Math.random() * c_height) ];
-	k = colors[Math.floor(Math.random() * colors.length)];
-	l = randomRange(radii[0], radii[1]);
-	j = [ randomRange(l, c_width - l), randomRange(l, c_height - l) ]; // We need to make sure that particles don't get stuck on the border
-	m = [ randomRangeFloat(speeds[0], speeds[1]), randomRangeFloat(speeds[0], speeds[1]) ]
-
-	particles.push(new Particle(j, k, l, m));
+/*
+ * Wipe canvas
+ */
+function wipeCanvas () {
+	c.fillStyle = "#FFF";
+	c.fillRect(0, 0, c_width, c_height);
+	c.fillStyle = "#000";
 }
 
+/*
+ * Button event handler
+ */
+function generateButton () {
+	particles = [];
+	wipeCanvas();
+	nrParticles = document.getElementsByName('nrParticles')[0].value;
+	radii = [ radii[0], document.getElementsByName('radius')[0].value ];
+	var s = document.getElementsByName('speed')[0].value;
+	speeds = [ -1 * s, s ];
+	coefficient = document.getElementsByName('coefficient')[0].value;
+
+	generate();
+	start = (new Date()).getTime();
+	time = start;
+}
+
+// Update HTML
+document.getElementsByName('nrParticles')[0].value = nrParticles;
+document.getElementsByName('radius')[0].value = radii[1];
+document.getElementsByName('speed')[0].value = speeds[1];
+document.getElementsByName('coefficient')[0].value = coefficient;
+
 // Let's go!
+generate();
 var start = (new Date()).getTime(),
 	time = start;
 frame();
