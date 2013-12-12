@@ -1,7 +1,9 @@
-var nrParticles = 12,
-	radii = [4, 32],
+var nrParticles = 12, 		// Number of random particles
+	radii = [4, 32],		// Radius range
+	speeds = [-500, 500], 	// Speed range
+	coefficient = 0.9, 		// Coefficient of restitution (c = 1 <=> elastic collision)
+
 	colors = [ "#C63D0F", "#FDF3E7", "#7E8F7C", "#005A31", "#A8CD1B", "#CBE32D", "#F3FAB6", "#558C89", "#74AFAD", "#D9853B", "#2B2B2B","#DE1B1B", "#E9E581", "#7D1935", "#4A96AD", "#E44424", "#67BCDB", "#A2AB58", "#404040", "#6DBDD6", "#B71427", "#FFE658", "#118C4E", "#C1E1A6","#FF9009" ],
-	speeds = [-500, 500],
 	particles = [],
 	c = document.getElementById('particles'),
 	c_width = c.width,
@@ -20,8 +22,7 @@ function Particle (position, color, radius, speed) {
 	this.color = color;
 	this.radius = radius;
 	this.speed = speed;
-
-	this.collision = function () { return false; }
+	//this.collision = function () { return false; } // In case there will be other shapes
 }
 
 /*
@@ -42,7 +43,11 @@ function frame () {
 		y = particles[i].position[1] + particles[i].speed[1] * diff / 1000;
 		coll = collision(x, y, particles[i].radius);
 		if (coll !== false) {
+			//
 			particles[i].speed[coll] = -1 * particles[i].speed[coll];
+			// Inelastic collision
+			particles[i].speed[0] *= coefficient;
+			particles[i].speed[1] *= coefficient;
 		} else {
 			particles[i].position[0] = x;
 			particles[i].position[1] = y;
@@ -61,6 +66,7 @@ function frame () {
 
 /*
  * Collision with canvas' borders
+ * In case of collision return which component of speed vector to update. Otherwise return false.
  */
 function collision (x, y, r) {
 	if (x - r < 0 || x + r > c_width) {
@@ -99,6 +105,6 @@ for (var i = 0; i < nrParticles; i++) {
 }
 
 // Let's go!
-var start = (new Date()).getTime();
-var time = start;
+var start = (new Date()).getTime(),
+	time = start;
 frame();
